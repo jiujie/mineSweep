@@ -23,6 +23,110 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+//import javax.swing.JApplet;
+
+public class MineSweep extends JFrame {
+	private static final long serialVersionUID = -144004528048552373L;
+	JPanel game;
+	CardLayout cardLayout = new CardLayout();
+
+	
+	public MineSweep() { // 启动
+
+		getContentPane().setLayout(cardLayout);
+		System.gc();
+		setBackground(Color.darkGray);
+		
+		setSize(800,510);
+		mainWindow();
+		selectClass();
+	}
+
+	public void beginGame(int difficulty) { // 调用Game开始游戏
+
+		if (game != null) {
+			remove(game);
+		}
+		game = new Game(difficulty);
+		getContentPane().add(game);
+		cardLayout.next(getContentPane());
+	}
+
+	public void mainWindow() { // 主起始窗口
+
+		JPanel mainPanel = new JPanel(new GridLayout());
+		mainPanel.setPreferredSize(new Dimension(800, 480));
+		mainPanel.setBackground(Color.DARK_GRAY);
+		JButton start = new JButton("开始扫雷游戏");
+		start.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		start.setBackground(Color.DARK_GRAY);
+		start.setFont(new Font(null, Font.CENTER_BASELINE, 100));
+		mainPanel.add(start);
+		getContentPane().add(mainPanel);
+		setVisible(true);
+
+		start.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// remove(nowPanel);
+				cardLayout.next(getContentPane());
+			}
+		});
+
+	}
+
+	public void selectClass() { // 选择难度窗口
+		JPanel selectPanel;
+		selectPanel = new JPanel(new FlowLayout());
+		selectPanel.setBackground(Color.DARK_GRAY);
+		selectPanel.setPreferredSize(new Dimension(800, 480));
+
+		final JButton[] buttons = new JButton[4];
+		String[] buttonsName = { "简单", "中等", "困难", "返回" };
+		ActionListener[] actions = new ActionListener[4];
+
+		ActionListener main = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cardLayout.previous(getContentPane());
+			}
+		};
+
+		ActionListener begin = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (arg0.getSource() == buttons[0]) {
+					beginGame(0);
+				} else {
+					if (arg0.getSource() == buttons[1]) {
+						beginGame(1);
+					} else {
+						beginGame(2);
+					}
+				}
+				System.gc();
+			}
+		};
+
+		actions[0] = begin;
+		actions[1] = begin;
+		actions[2] = begin;
+		actions[3] = main;
+
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i] = new JButton(buttonsName[i]);
+			buttons[i].setBackground(Color.BLACK);
+			buttons[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+			buttons[i].setFont(new Font(null, Font.BOLD, 80));
+			buttons[i].addActionListener(actions[i]);
+			selectPanel.add(buttons[i]);
+		}
+
+		buttons[3].setPreferredSize(new Dimension(600, 100));
+
+		getContentPane().add(selectPanel);
+	}
+}
+
 
 /**
  * 
@@ -424,106 +528,4 @@ class Game extends JPanel {
 
 }
 
-public class MineSweep extends JFrame {
 
-
-	private static final long serialVersionUID = -144004528048552373L;
-	JPanel game;
-	CardLayout cardLayout = new CardLayout();
-
-	
-	public MineSweep() { // 启动
-
-		setLayout(cardLayout);
-		System.gc();
-		setBackground(Color.darkGray);
-		
-		setSize(800,510);
-		mainWindow();
-		selectClass();
-	}
-
-	public void beginGame(int difficulty) { // 调用Game开始游戏
-
-		if (game != null) {
-			remove(game);
-		}
-		game = new Game(difficulty);
-		add(game);
-		cardLayout.next(getContentPane());
-	}
-
-	public void mainWindow() { // 主起始窗口
-
-		JPanel mainPanel = new JPanel(new GridLayout());
-		mainPanel.setPreferredSize(new Dimension(800, 480));
-		mainPanel.setBackground(Color.DARK_GRAY);
-		JButton start = new JButton("开始扫雷游戏");
-		start.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-		start.setBackground(Color.DARK_GRAY);
-		start.setFont(new Font(null, Font.CENTER_BASELINE, 100));
-		mainPanel.add(start);
-		add(mainPanel);
-		setVisible(true);
-
-		start.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// remove(nowPanel);
-				cardLayout.next(getContentPane());
-			}
-		});
-
-	}
-
-	public void selectClass() { // 选择难度窗口
-		JPanel selectPanel;
-		selectPanel = new JPanel(new FlowLayout());
-		selectPanel.setBackground(Color.DARK_GRAY);
-		selectPanel.setPreferredSize(new Dimension(800, 480));
-
-		final JButton[] buttons = new JButton[4];
-		String[] buttonsName = { "简单", "中等", "困难", "返回" };
-		ActionListener[] actions = new ActionListener[4];
-
-		ActionListener main = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				cardLayout.previous(getContentPane());
-			}
-		};
-
-		ActionListener begin = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (arg0.getSource() == buttons[0]) {
-					beginGame(0);
-				} else {
-					if (arg0.getSource() == buttons[1]) {
-						beginGame(1);
-					} else {
-						beginGame(2);
-					}
-				}
-				System.gc();
-			}
-		};
-
-		actions[0] = begin;
-		actions[1] = begin;
-		actions[2] = begin;
-		actions[3] = main;
-
-		for (int i = 0; i < buttons.length; i++) {
-			buttons[i] = new JButton(buttonsName[i]);
-			buttons[i].setBackground(Color.BLACK);
-			buttons[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-			buttons[i].setFont(new Font(null, Font.BOLD, 80));
-			buttons[i].addActionListener(actions[i]);
-			selectPanel.add(buttons[i]);
-		}
-
-		buttons[3].setPreferredSize(new Dimension(600, 100));
-
-		add(selectPanel);
-	}
-}
